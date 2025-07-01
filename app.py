@@ -64,7 +64,7 @@ if st.session_state.current_page == "home":
         """)
     
     with col2:
-        st.image("img/icon.jpg", width=400)
+        st.image("image/icon_xray.png", width=400)
     
     st.markdown("---")
     st.info("💡 **Tips**: Gunakan tombol 'Deteksi' di sidebar untuk mulai menganalisis gambar chest x-ray Anda.")
