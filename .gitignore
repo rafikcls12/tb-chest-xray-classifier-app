@@ -1,6 +1,7 @@
 # Environment variables
 .venv/*
 /venv/*
+.myenv/*
 .venv.local
 .venv.development.local
 .venv.test.local
@@ -42,3 +43,4 @@ npm-debug.log*
 
 # Test
 /test/*
+/img/*
