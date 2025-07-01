@@ -1,0 +1,44 @@
+# Environment variables
+.venv/*
+/venv/*
+.venv.local
+.venv.development.local
+.venv.test.local
+.venv.production.local
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.vs/
+*.swp
+*.swo
+model/*
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Debug logs
+logs/
+*.log
+npm-debug.log*
+
+# Testing
+/coverage
+
+# Misc
+.cache/
+.temp/
+.tmp/
+
+# Model
+.h5
+.pth
+.keras
+
+# Test
+/test/*
