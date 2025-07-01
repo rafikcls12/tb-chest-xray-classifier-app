@@ -1,4 +1,4 @@
-# A web-based application built with Streamlit to classify chest X-ray images for tuberculosis detection using machine learning models in Python.
+# A web-based application built with Streamlit to classify chest X-ray images for tuberculosis classification using deep learning models.
 ![Deteksi-Chest-X-ray](https://github.com/user-attachments/assets/8fbc3b7b-416b-4ad3-8f7f-036dbe40dafd)
 
 # Download Model disini
