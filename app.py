@@ -79,9 +79,9 @@ elif st.session_state.current_page == "detection":
     
     # Model selection
     model_paths = {
-        "Model 1 (VGG-19)": "model/tb_vgg19_100_updt.h5",
+        "Model 1 (VGG-19)": "model_/tb_vgg19_100_updt.h5",
         # "Model 1 (VGG-19)": "model/vgg19/vgg19_scene3_100.h5"
-        "Model 2 (Xception)": "model/tb_xception_100.h5",
+        "Model 2 (Xception)": "model_/tb_xception_100.h5",
         # "Model 2 (Xception)": "model/xception/xception_scene2_200.h5",
         "Model 3 (VGG-16)": "model/vgg16/vgg16_scene1.pth",
         "Model 4 (CNN)": "model/cnn/cnn_scene3.keras"
