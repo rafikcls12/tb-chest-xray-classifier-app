@@ -83,8 +83,8 @@ elif st.session_state.current_page == "detection":
         # "Model 1 (VGG-19)": "model/vgg19/vgg19_scene3_100.h5"
         "Model 2 (Xception)": "model_/tb_xception_100.h5",
         # "Model 2 (Xception)": "model/xception/xception_scene2_200.h5",
-        "Model 3 (VGG-16)": "model/vgg16/vgg16_scene1.pth",
-        "Model 4 (CNN)": "model/cnn/cnn_scene3.keras"
+        "Model 3 (VGG-16)": "model_/vgg16_scene1.h5",
+        "Model 4 (CNN)": "model_/cnn_scene1.h5"
     }
     
     # Sidebar untuk pemilihan model
@@ -199,33 +199,60 @@ elif st.session_state.current_page == "detection":
         if not uploaded_file:
             st.warning("Silahkan masukkan gambar.")
         else:
-            col1, col2 = st.columns(2)
+            # Tampilkan preview gambar dengan toggle untuk original/resized
+            st.subheader("📷 Preview Gambar:")
             
-            with col1:
-                st.subheader("Gambar Input (Original):")
-                st.image(uploaded_file, use_column_width=True)
-                
+            # Toggle untuk memilih tampilan
+            view_mode = st.radio(
+                "Pilih tampilan:",
+                ["Original", "Resized", "Kedua"],
+                horizontal=True,
+                key="single_view_mode"
+            )
+            col1, col2 = st.columns(2) 
+            if view_mode == "Original":
+                with col1:
+                        original_img = Image.open(uploaded_file)
+                        st.subheader(f"Citra Input Original: {original_img.size[0]}x{original_img.size[1]}")
+                        st.caption(uploaded_file.name)
+                        st.image(uploaded_file, use_container_width=True)
+            
+            elif view_mode == "Resized":
                 # Tampilkan gambar yang sudah diresize
-                st.subheader(f"Gambar Resized ({choose_model}):")
-                resized_img = resize_image_for_preview(uploaded_file, choose_model)
-                st.image(resized_img, use_column_width=True)
-                
-                # Tampilkan informasi ukuran
-                original_img = Image.open(uploaded_file)
-                st.caption(f"Original: {original_img.size[0]}x{original_img.size[1]} → Resized: {resized_img.size[0]}x{resized_img.size[1]}")
-            
-            with col2:
-                st.subheader("Kontrol:")
-                if st.button("🔍 Mulai Prediksi", type="primary", use_container_width=True):
-                    if model is None:
-                        st.error("Model belum dimuat dengan benar!")
-                    else:
-                        # Catat waktu mulai
-                        start_time = time.time()
-                        start_datetime = datetime.datetime.now()
+                with col1:
+                        resized_img = resize_image_for_preview(uploaded_file, choose_model)
+                        original_img = Image.open(uploaded_file)
+                        st.subheader(f"Resized ({choose_model}): ")
+                        st.subheader(f"{original_img.size[0]}x{original_img.size[1]} → {resized_img.size[0]}x{resized_img.size[1]}")
+                        st.caption(uploaded_file.name)
+                        st.image(resized_img,use_container_width=True)
                         
-                        with st.spinner("Sedang memproses..."):
-                            try:
+            else:  # Kedua
+                    with st.expander(f"📷 {uploaded_file.name}"):
+                        # col1, col2 = st.columns(2)                      
+                        with col1:
+                            original_img = Image.open(uploaded_file)
+                            st.subheader(f"Citra Input Original: {original_img.size[0]}x{original_img.size[1]}")
+                            st.image(uploaded_file,use_container_width=True)
+                        
+                        with col2:
+                            resized_img = resize_image_for_preview(uploaded_file, choose_model)
+                            original_img = Image.open(uploaded_file)
+                            st.subheader(f"Resized ({choose_model}): {original_img.size[0]}x{original_img.size[1]}→{resized_img.size[0]}x{resized_img.size[1]}")
+                            st.image(resized_img,use_container_width=True)
+
+
+            # Button untuk memulai prediksi batch
+            if st.button("🚀 Mulai Single Prediction", type="primary", use_container_width=True):
+                if model is None:
+                    st.error("Model belum dimuat dengan benar!")
+                else:
+                    # Catat waktu mulai
+                    start_time = time.time()
+                    start_datetime = datetime.datetime.now()
+                    
+                    with st.spinner("Sedang memproses..."):
+                        try:
                                 # Preprocessing
                                 preprocess_start = time.time()
                                 processed_image = preprocess_image(uploaded_file, choose_model)
@@ -247,7 +274,7 @@ elif st.session_state.current_page == "detection":
                                 st.success(f"Hasil Prediksi: **{predicted_class}**")
                                 st.metric(label="Tingkat Kepercayaan", value=f"{confidence:.2f}%")
                                 
-                                # Tampilkan informasi kecepatan
+# # Tampilkan informasi kecepatan
                                 st.subheader("⚡ Informasi Kecepatan:")
                                 
                                 col_speed1, col_speed2, col_speed3 = st.columns(3)
@@ -289,7 +316,7 @@ elif st.session_state.current_page == "detection":
                                 }
                                 st.bar_chart(prob_data, x='Kelas', y='Probabilitas', use_container_width=True)
                                 
-                            except Exception as e:
+                        except Exception as e:
                                 st.error(f"Terjadi kesalahan: {e}")
     
     with tab2:
@@ -315,7 +342,8 @@ elif st.session_state.current_page == "detection":
             view_mode = st.radio(
                 "Pilih tampilan:",
                 ["Original", "Resized", "Kedua"],
-                horizontal=True
+                horizontal=True,
+                key="multi_view_mode"
             )
             
             if view_mode == "Original":
@@ -323,7 +351,8 @@ elif st.session_state.current_page == "detection":
                 for idx, uploaded_file in enumerate(uploaded_files):
                     col_idx = idx % 4
                     with cols[col_idx]:
-                        st.image(uploaded_file, caption=uploaded_file.name, use_column_width=True)
+                        st.caption(uploaded_file.name)
+                        st.image(uploaded_file, use_container_width=True)
             
             elif view_mode == "Resized":
                 cols = st.columns(min(4, len(uploaded_files)))
@@ -333,7 +362,8 @@ elif st.session_state.current_page == "detection":
                         resized_img = resize_image_for_preview(uploaded_file, choose_model)
                         original_img = Image.open(uploaded_file)
                         caption = f"{uploaded_file.name}\n{original_img.size[0]}x{original_img.size[1]} → {resized_img.size[0]}x{resized_img.size[1]}"
-                        st.image(resized_img, caption=caption, use_column_width=True)
+                        st.caption(caption)
+                        st.image(resized_img, use_container_width=True)
             
             else:  # Kedua
                 for idx, uploaded_file in enumerate(uploaded_files):
@@ -342,17 +372,17 @@ elif st.session_state.current_page == "detection":
                         
                         with col1:
                             st.subheader("Original:")
-                            st.image(uploaded_file, use_column_width=True)
+                            st.image(uploaded_file,use_container_width=True)
                         
                         with col2:
                             st.subheader(f"Resized ({choose_model}):")
                             resized_img = resize_image_for_preview(uploaded_file, choose_model)
                             original_img = Image.open(uploaded_file)
-                            st.image(resized_img, use_column_width=True)
+                            st.image(resized_img,use_container_width=True)
                             st.caption(f"{original_img.size[0]}x{original_img.size[1]} → {resized_img.size[0]}x{resized_img.size[1]}")
 
             # Button untuk memulai prediksi batch
-            if st.button("🚀 Mulai Batch Prediction", type="primary", use_container_width=True):
+            if st.button("🚀 Mulai Batch Prediction", type="primary", use_container_width=True, key="multi_batch_button"):
                 if model is None:
                     st.error("Model belum dimuat dengan benar!")
                 else:
@@ -510,7 +540,7 @@ elif st.session_state.current_page == "detection":
                             with col1:
                                 # Tampilkan gambar
                                 uploaded_files[idx].seek(0)  # Reset file pointer
-                                st.image(uploaded_files[idx], use_column_width=True)
+                                st.image(uploaded_files[idx],use_container_width=True)
                             
                             with col2:
                                 # Tampilkan hasil prediksi
