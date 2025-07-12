@@ -79,10 +79,8 @@ elif st.session_state.current_page == "detection":
     
     # Model selection
     model_paths = {
-        "Model 1 (VGG-19)": "model_/tb_vgg19_100_updt.h5",
-        # "Model 1 (VGG-19)": "model/vgg19/vgg19_scene3_100.h5"
-        "Model 2 (Xception)": "model_/tb_xception_100.h5",
-        # "Model 2 (Xception)": "model/xception/xception_scene2_200.h5",
+        "Model 1 (VGG-19)": "model_/vgg19_scene3_50_224.h5",
+        "Model 2 (Xception)": "model_/xception_scene3_50_299.h5",
         "Model 3 (VGG-16)": "model_/vgg16_scene1.h5",
         "Model 4 (CNN)": "model_/cnn_scene1.h5"
     }
@@ -96,6 +94,7 @@ elif st.session_state.current_page == "detection":
     # Load model dengan caching
     @st.cache_resource
     def load_model(model_path):
+        
         try:
             model = tf.keras.models.load_model(model_path)
             return model
