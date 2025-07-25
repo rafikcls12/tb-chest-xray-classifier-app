@@ -37,9 +37,9 @@ npm-debug.log*
 .tmp/
 
 # Model
-.h5
-.pth
-.keras
+# .h5
+# .pth
+# .keras
 
 # Test
 /test/*
