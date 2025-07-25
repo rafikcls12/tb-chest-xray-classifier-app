@@ -157,6 +157,7 @@ elif st.session_state.current_page == "detection":
                 # Prediksi
                 prediction = model.predict(processed_image, verbose=0)
                 
+
                 # Ambil hasil
                 predicted_class = CLASSES[np.argmax(prediction)]
                 confidence = np.max(prediction) * 100
