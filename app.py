@@ -82,7 +82,7 @@ elif st.session_state.current_page == "detection":
         "Model 1 (VGG-19)": "model_/vgg19_scene3_50_224.h5",
         "Model 2 (Xception)": "model_/xception_scene3_50_299.h5",
         "Model 3 (VGG-16)": "model_/vgg16_scene1.h5",
-        "Model 4 (CNN)": "model_/cnn_scene1.h5"
+        # "Model 4 (CNN)": "model_/cnn_scene1.h5"
     }
     
     # Sidebar untuk pemilihan model
